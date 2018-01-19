@@ -1,3 +1,4 @@
+import scipy
 from scipy import optimize
 import numpy as np
 import scipy.optimize as sc
@@ -11,8 +12,8 @@ import scipy.optimize as sc
 # t = optimize.minimize(fun, 3, 3, method="L-BFGS-B")
 # print(t)
 
-Y = [1, 2, 3]
-X = [[1, 2, 3], [1, 2, 3], [1, 2, 3], ]
+Y = np.array([1, 2, 3])
+X = np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3], ])
 K = 3
 
 
@@ -24,15 +25,28 @@ def count_sum(K, X, Y, i):
 
 
 def sigmoid(params, K, X, Y, i, y):
-    return np.exp(np.dot(params[y-1], X[i])) / count_sum(K, X, Y, i)
+    return np.exp(np.dot(params[y - 1], X[i])) / count_sum(K, X, Y, i)
 
 
 def log_likelihood(params, K, X, Y):
+    print('params: ' + str(params))
     sum = 0
     for i in range(len(X)):
         sum += np.log(sigmoid(params, K, X, Y, i, Y[i]))
     return sum
 
+
 tmp = np.random.normal(0, 1, len(X[0]) * K).reshape(len(X[0]), K)
-print(tmp)
-x = sc.minimize(log_likelihood, tmp, args=(K, X, Y))
+print('tmp: ' + str(tmp))
+
+
+# def f(x):
+#     return x**2
+# print(np.gradient(f))
+# print(np)
+def custom_gradient(lambdas, K, X, Y):
+    print('lambdas: ' + str(lambdas))
+    return np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+
+x = sc.minimize(log_likelihood, tmp, args=(K, X, Y), jac=custom_gradient)
