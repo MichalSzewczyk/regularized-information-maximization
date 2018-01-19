@@ -1,0 +1,38 @@
+from scipy import optimize
+import numpy as np
+import scipy.optimize as sc
+
+#
+#
+# def fun(x, y):
+#     return x ** 2 + y ** 2
+#
+#
+# t = optimize.minimize(fun, 3, 3, method="L-BFGS-B")
+# print(t)
+
+Y = [1, 2, 3]
+X = [[1, 2, 3], [1, 2, 3], [1, 2, 3], ]
+K = 3
+
+
+def count_sum(K, X, Y, i):
+    sum = 0
+    for k in range(1, K + 1):
+        sum += np.exp(np.dot(Y[k - 1], X[i]))
+    return sum
+
+
+def sigmoid(params, K, X, Y, i, y):
+    return np.exp(np.dot(params[y-1], X[i])) / count_sum(K, X, Y, i)
+
+
+def log_likelihood(params, K, X, Y):
+    sum = 0
+    for i in range(len(X)):
+        sum += np.log(sigmoid(params, K, X, Y, i, Y[i]))
+    return sum
+
+tmp = np.random.normal(0, 1, len(X[0]) * K).reshape(len(X[0]), K)
+print(tmp)
+x = sc.minimize(log_likelihood, tmp, args=(K, X, Y))
