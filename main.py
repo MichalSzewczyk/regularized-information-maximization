@@ -1,13 +1,19 @@
-from commands.commands_executor import CommandsExecutor
-from commands.commands_supplier import CommandsSupplier
-from data.data_supplier import InputDataSupplier
+import pandas as pd
 
-# K = input('K: ')
-# a = input('α: ')
-from utils.logging_facade import LogFacade
 
-logger = LogFacade.get_logger()
-data_supplier = InputDataSupplier()
-supplier = CommandsSupplier(logger)
-executor = CommandsExecutor(supplier, data_supplier)
-executor.execute()
+class ClassificationDTO:
+    def __init__(self, X, alpha):
+        self.X = X
+        self.alpha = alpha
+
+
+def load_data(data_source):
+    user_knowledge = pd.read_csv(data_source).values
+    return user_knowledge
+
+
+loaded_data = load_data('sample_data.csv')
+examples = loaded_data[:, :-1].astype(float)
+real_classification = loaded_data[:, -1]
+
+
